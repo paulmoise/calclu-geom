@@ -1,4 +1,5 @@
 from point import Point
+from carrer import Carre
 
 def calcul_surface_entre_deux_points(p1: Point, p2: Point):
     print("calcul de distance entre",p1.name," et ",p2.name," : ")
@@ -7,6 +8,7 @@ def calcul_surface_entre_deux_points(p1: Point, p2: Point):
 p1 = Point("A", 1, 2)
 p2 = Point("B", 5, 5)
 calcul_surface_entre_deux_points(p1, p2)
+
 def lire_square():
     print("Entrez le nom et la longueur du côté du carré dans le format suivant : Nom = Carre(cote)")
     input_str = input("Nom et côté : ")
@@ -21,3 +23,10 @@ def lire_square():
 nom_du_carre, cote_du_carre = lire_square()
 print("Nom du carré :", nom_du_carre)
 print("Longueur du côté du carré :", cote_du_carre)
+
+def calcul_surface_carrer(carrer: Carre):
+    print("calcul de surface de ",carrer.name," : ",carrer.surface())
+
+carrer = Carre("carrer1", 5)
+calcul_surface_carrer(carrer)
+
