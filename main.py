@@ -7,5 +7,5 @@ p1 = lire_point_teminal()
 p2 = lire_point_teminal()
 calcul_surface_entre_deux_points(p1, p2)
 
-carrer = Carre("carrer1", 5)
+carrer = lire_square()
 calcul_surface_carrer(carrer)

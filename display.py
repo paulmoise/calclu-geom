@@ -32,4 +32,18 @@ def lire_point_teminal() -> Point:
 def calcul_surface_carrer(carrer: Carre):
     print("calcul de surface de ",carrer.name," : ",carrer.surface())
 
+def lire_square():
+    print("Declarer un carre nom=carre(x)")
+    input_str = input()
+    nom, reste = input_str.split("=")
+    cote = reste.split("(")[1].split(")")[0]
+    cote = cote.strip()
+    if not cote.isdigit():
+        raise ValueError("La longueur du côté doit être un nombre.")
+    cote = float(cote)
+    carre=Carre(nom, cote)
+
+    return carre
+
+
 
