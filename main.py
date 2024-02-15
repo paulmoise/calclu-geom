@@ -1,7 +1,11 @@
+from display import *
 from point import Point
+from point import Point
+from carrer import Carre
 
-p1 = Point("A", 1, 2)
-p2 = Point("B", 5, 5)
-p1.display()
-p2.display()
-print(p1.distance(p2))
+p1 = lire_point_teminal()
+p2 = lire_point_teminal()
+calcul_surface_entre_deux_points(p1, p2)
+
+carrer = lire_square()
+calcul_surface_carrer(carrer)
