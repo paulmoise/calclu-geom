@@ -1,4 +1,5 @@
-class Cercle:
+import forme_geometric
+class Cercle(forme_geometric):
     def __init__(self, rayon):
         self.rayon = rayon
 
