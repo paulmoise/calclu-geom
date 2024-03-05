@@ -1,4 +1,5 @@
-class Rectangle:
+import forme_geometric
+class Rectangle(forme_geometric):
 
     def __init__(self, nom,longueur,largeur):
         self.name = nom

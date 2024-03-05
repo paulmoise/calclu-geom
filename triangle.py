@@ -1,4 +1,5 @@
-class Triangle:
+import forme_geometric
+class Triangle(forme_geometric):
     def __init__(self,nom, cote1, cote2, cote3):
         self.cote1 = cote1
         self.cote2 = cote2
