@@ -15,3 +15,6 @@ class Triangle(forme_geometric.FormeGeometrique):
 
     def perimetre(self):
         return self.cote1 + self.cote2 + self.cote3
+
+    def __str__(self):
+        return f"Triangle {self.name} de cote ({self.cote1} ; {self.cote2} et {self.cote3})"
