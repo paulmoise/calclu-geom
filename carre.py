@@ -14,3 +14,6 @@ class Carre(FormeGeometrique):
 
     def perimetre(self):
         return self.cote * 4
+
+    def __str__(self):
+        return f"Carre {self.name} de cote ({self.cote})"
