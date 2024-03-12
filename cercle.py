@@ -23,3 +23,6 @@ class Cercle(FormeGeometrique):
 
     def __str__(self):
         return f"Cercle {self.name} de centre ({self.rayon})"
+    
+    def calcule_centre(self):
+        return Point(self.name, self.point.x, self.point.y)

@@ -24,3 +24,6 @@ class Rectangle(FormeGeometrique):
 
     def __str__(self):
         return f"Rectangle {self.name} de longueur (L = {self.longueur}) et de largeur l = ({self.largeur})"
+    
+    def calcule_centre(self):
+        return Point(self.name, self.point.x + self.longueur / 2, self.point.y + self.largeur / 2)

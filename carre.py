@@ -5,12 +5,10 @@ class Carre(FormeGeometrique):
 
     def __init__(self, nom, cote):
         super().__init__()
-
         self.name = nom
         self.cote = cote
 
     def __init__(self, nom, cote,Point):
-
         self.point = Point
         self.name = nom
         self.cote = cote
@@ -23,3 +21,6 @@ class Carre(FormeGeometrique):
 
     def __str__(self):
         return f"Carre {self.name} de cote ({self.cote})"
+    
+    def calcule_centre(self):
+        return Point(self.name, self.point.x + self.cote / 2, self.point.y + self.cote / 2)
