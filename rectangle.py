@@ -1,5 +1,5 @@
 from forme_geometric import FormeGeometrique
-
+from point import Point
 
 class Rectangle(FormeGeometrique):
 
@@ -8,6 +8,13 @@ class Rectangle(FormeGeometrique):
         self.name = nom
         self.longueur = longueur
         self.largeur = largeur
+
+    def __init__(self, nom, longueur, largeur,Point):
+        super().__init__()
+        self.name = nom
+        self.longueur = longueur
+        self.largeur = largeur
+        self.point = Point
 
     def surface(self):
         return self.longueur * self.largeur
