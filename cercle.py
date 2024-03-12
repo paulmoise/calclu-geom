@@ -1,5 +1,6 @@
 from forme_geometric import FormeGeometrique
 from math import pi
+from point import Point
 
 
 class Cercle(FormeGeometrique):
@@ -7,6 +8,12 @@ class Cercle(FormeGeometrique):
         super().__init__()
         self.name = name
         self.rayon = rayon
+
+    def __init__(self, name, rayon, Point):
+        super().__init__()
+        self.name = name
+        self.rayon = rayon
+        self.point = Point
 
     def surface(self):
         return pi * self.rayon * self.rayon
