@@ -3,10 +3,11 @@ from math import pi
 
 
 class Cercle(FormeGeometrique):
-    def __init__(self, name, rayon):
+    def __init__(self, name, rayon, point=None):
         super().__init__()
         self.name = name
         self.rayon = rayon
+        self.point = point
 
     def surface(self):
         return pi * self.rayon * self.rayon

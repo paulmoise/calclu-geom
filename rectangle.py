@@ -3,11 +3,12 @@ from forme_geometric import FormeGeometrique
 
 class Rectangle(FormeGeometrique):
 
-    def __init__(self, nom, longueur, largeur):
+    def __init__(self, nom, longueur, largeur, point=None):
         super().__init__()
         self.name = nom
         self.longueur = longueur
         self.largeur = largeur
+        self.point = point
 
     def surface(self):
         return self.longueur * self.largeur
