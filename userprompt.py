@@ -140,10 +140,7 @@ def extract_command(text):
         if key not in results:
             results[key] = []
 
-        if ';' in params:
-            results[key] = params.split(';')
-        if "," in params:
-            results[key] = params.split(',')
+        results[key] = params.split(';')
     return name, results
 
 
