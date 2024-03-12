@@ -158,35 +158,50 @@ def main():
         try:
             text = session.prompt('> ')
             name, obj_details = extract_command(text)
-            print(name, obj_details)
+            # print(name, obj_details)
             type_form = list(obj_details.keys())[0]
             params = obj_details[type_form]
 
             obj = None
             if type_form == 'Carre':
                 obj = Carre(name, float(params[0]))
+                object_memory[name] = obj
             elif type_form == 'Triangle':
                 obj = Triangle(name, float(params[0]), float(params[1]), float(params[2]))
+                object_memory[name] = obj
+
             elif type_form == 'Point':
                 obj = Point(name, float(params[0]), float(params[1]))
+                object_memory[name] = obj
+
             elif type_form == 'Cercle':
                 obj = Cercle(name, float(params[0]))
+                object_memory[name] = obj
+
             elif type_form == 'Rectangle':
                 obj = Rectangle(name, float(params[0]), float(params[1]))
+                object_memory[name] = obj
+
             elif type_form == 'Distance':
                 p1 = object_memory[params[0]]
                 p2 = object_memory[params[1]]
                 d = p1.distance(p2)
-                print(f"Distance({p1.name}; {p2.name}) = {round(d, 2)}")
+                str_distance = f"Distance({p1.name}; {p2.name}) = {round(d, 2)}"
+                object_memory[name] = str_distance
+
+                # print(f"Distance({p1.name}; {p2.name}) = {round(d, 2)}")
             elif type_form == 'Surface':
                 obj = object_memory[params[0]]
                 s = obj.surface()
-                print(f"Surface({obj.name}) = {round(s, 2)}")
+                str_surface = f"Surface({obj.name}) = {round(s, 2)}"
+                object_memory[name] = str_surface
+                # print(f"Surface({obj.name}) = {round(s, 2)}")
             elif type_form == 'Perimetre':
                 obj = object_memory[params[0]]
                 p = obj.perimetre()
-                print(f"Perimetre({obj.name}) = {p}")
-            object_memory[name] = obj
+                str_perimetre = f"Perimetre({obj.name}) = {p}"
+                # print(f"Perimetre({obj.name}) = {p}")
+                object_memory[name] = str_perimetre
             print(f"___________________________________________________________")
             print(f"List des objets en memoire:")
             for idx, (key, value) in enumerate(object_memory.items()):
