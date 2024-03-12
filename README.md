@@ -14,7 +14,7 @@ Bibliothèque de calculs géométriques (distances, surfaces, etc.)
 - Install requirements
 `pip install -r requirements.txt`
 
-- Rurn `python3 userprompt.py`
+- Run `python3 userprompt.py`
 
 Enjoy your Gemotric Calculations !!!
 
