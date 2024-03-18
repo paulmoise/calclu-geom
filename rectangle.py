@@ -17,4 +17,11 @@ class Rectangle(FormeGeometrique):
         return 2 * (self.longueur + self.largeur)
 
     def __str__(self):
-        return f"Rectangle {self.name} de longueur (L = {self.longueur}) et de largeur l = ({self.largeur})"
+        if self.point:
+            obj_str = (f"Rectangle: Nom = {self.name};  Longueur = {self.longueur}; Largeur = {self.largeur}; "
+                       f"Point = {self.point}")
+        obj_str = f"Rectangle: Nom = {self.name};  Longueur = {self.longueur}; Largeur = {self.largeur}"
+        return obj_str
+
+    def calculate_center(self):
+        return round(self.longueur / 2, 2), round(self.largeur / 2, 2)

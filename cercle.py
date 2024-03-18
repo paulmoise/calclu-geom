@@ -16,4 +16,7 @@ class Cercle(FormeGeometrique):
         return 2 * pi * self.rayon
 
     def __str__(self):
-        return f"Cercle {self.name} de centre ({self.rayon})"
+        if self.point:
+            return (f"Cercle: Nom = {self.name};  Rayon = {self.rayon}; "
+                    f"Point = {self.point.name} ({self.point.x}; {self.point.y})")
+        return f"Cercle: Nom = {self.name};  Rayon = {self.rayon}"

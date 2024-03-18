@@ -15,7 +15,7 @@ from point import Point
 from rectangle import Rectangle
 from triangle import Triangle
 
-keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter']
+keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter', "Centre", "Export", "export"]
 
 bindings = KeyBindings()
 
@@ -121,7 +121,7 @@ welcome_text = 'Bienvenue dans le programme de calcul geometrique\n'
 description = """
 Pour saisir un point: nom_point = Point(x, y)
 Pour saisir un carre: nom_carre = Carre(point, cote)
-Pour saisir un triangle: nom_triangle = Triangle(point1, point2, point3)
+Pour saisir un triangle: nom_triangle = Triangle(a, b, c)
 Pour calculer la distance entre deux points : d = Distance(point1, point2)
 Pour calculer la surface d'un carre : s = Surface(carre)
 Pour calculer la surface d'un triangle : s = Surface(triangle)
@@ -132,25 +132,20 @@ key_words_completer = WordCompleter(keywords, ignore_case=True)
 
 
 def extract_command(text):
-    pattern = r"(Export|Carre|Triangle|Cercle|Point|Distance|Rectangle|Surface|Perimetre)\(([^)]+)\)"
-
-    # get object name
-    name = text.split('=')[0].strip()
-
-    results = {}
-    matches = re.findall(pattern, text)
-    for match in matches:
-        # match is tuple of (keyword, params as string) Example: ('Point', '4;5')
-        key, params = match
-        if key not in results:
-            results[key] = []
-
-        results[key] = params.split(';')
-
-    return name, results
+    # Splitting the text into variable name and the command
+    name, command = [part.strip() for part in text.split('=')]
+    # Extracting shape name and parameters
+    shape_name, params = re.match(r"(\w+)\(([^)]+)\)", command).groups()
+    # Splitting parameters by comma and stripping whitespace
+    params = [param.strip() for param in params.split(';')]
+    print(f"Name: {name}, Shape: {shape_name}, Params: {params}")
+    return name, {shape_name: params}
 
 
-def execute_user_prompt(text: str, object_memory: dict = {}):
+def execute_user_prompt(text: str, object_memory=None):
+    if object_memory is None:
+        object_memory = {}
+
     name, obj_details = extract_command(text)
 
     type_form = list(obj_details.keys())[0]
@@ -160,8 +155,10 @@ def execute_user_prompt(text: str, object_memory: dict = {}):
     obj_str = None
 
     if type_form == 'Carre':
-        obj = Carre(name, float(params[0]))
-        obj_str = obj
+        if len(params) == 2:
+            obj_str = Carre(name, float(params[1]), object_memory[params[0]])
+        if len(params) == 1:
+            obj_str = Carre(name, float(params[0]))
 
     elif type_form == 'Triangle':
         obj = Triangle(name, float(params[0]), float(params[1]), float(params[2]))
@@ -172,12 +169,16 @@ def execute_user_prompt(text: str, object_memory: dict = {}):
         obj_str = obj
 
     elif type_form == 'Cercle':
-        obj = Cercle(name, float(params[0]))
-        obj_str = obj
+        if len(params) == 2:
+            obj_str = Cercle(name, float(params[1]), object_memory[params[0]])
+        if len(params) == 1:
+            obj_str = Cercle(name, float(params[0]))
 
     elif type_form == 'Rectangle':
-        obj = Rectangle(name, float(params[0]), float(params[1]))
-        obj_str = obj
+        if len(params) == 3:
+            obj_str = Rectangle(name, float(params[1]), float(params[2]), object_memory[params[0]])
+        if len(params) == 2:
+            obj_str = Rectangle(name, float(params[0]), float(params[1]))
 
     elif type_form == 'Distance':
         p1 = object_memory[params[0]]
@@ -188,13 +189,17 @@ def execute_user_prompt(text: str, object_memory: dict = {}):
     elif type_form == 'Surface':
         obj = object_memory[params[0]]
         s = obj.surface()
-        obj_str = f"Surface({obj.name}) = {round(s, 2)}"
+        obj_str = f"Surface: Nom Forme Géométrique = {obj.name}; Type = {type(obj).__name__}; Valeur = {round(s, 2)}"
 
     elif type_form == 'Perimetre':
         obj = object_memory[params[0]]
         p = obj.perimetre()
-        obj_str = f"Perimetre({obj.name}) = {round(p, 2)}"
+        obj_str = f"Perimetre: Forme Géométrique = {obj.name};  Type = {type(obj).__name__}; Valeur = {round(p, 2)}"
 
+    elif type_form == 'Centre':
+        obj = object_memory[params[0]]
+        x,y = obj.calculate_center()
+        obj_str = f"Centre: Forme Géométrique = {obj.name};  Type = {type(obj).__name__}; Centre = Point({x}, {y})"
     return name, obj_str
 
 
@@ -237,7 +242,7 @@ def main(file_path=None):
 
     if object_memory:
         print(f"___________________________________________________________")
-        print(f"List des objets en memoire:")
+        print(f"Liste des objets en memoire:")
         for idx, (key, value) in enumerate(object_memory.items()):
             print(f"{idx + 1}: {value}")
 
@@ -289,5 +294,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', type=str, help='Le chemin du fichier à traiter.')
     args = parser.parse_args()
-    file_path = "file/" + args.file
-    main(file_path)
+    if args.file is not None:
+        file_path = "file/" + args.file
+        main(file_path)
+    else:
+        main()
