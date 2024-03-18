@@ -1,4 +1,5 @@
 import re
+import argparse
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
@@ -14,25 +15,26 @@ from point import Point
 from rectangle import Rectangle
 from triangle import Triangle
 
-keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter']
+keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter', "Centre", "Export", "export"]
 
 bindings = KeyBindings()
 
 
-# @bindings.add('enter')
-# def handle_enter(event: KeyPressEvent):
-#     """
-#     Custom enter key behavior: select completion if menu is visible,
-#     otherwise, submit the text.
-#     """
-#     buffer = event.app.current_buffer
-#     # Check if the completion menu is visible
-#     if buffer.complete_state:
-#         # If visible, select the current completion
-#         buffer.complete_state.current_completion.complete(event)
-#     else:
-#         # Otherwise, submit the text
-#         buffer.validate_and_handle()
+@bindings.add('enter')
+def handle_enter(event: KeyPressEvent):
+    """
+    Custom enter key behavior: select completion if menu is visible,
+    otherwise, submit the text.
+    """
+    buffer = event.app.current_buffer
+    # Check if the completion menu is visible
+    if buffer.complete_state:
+        # If visible, select the current completion
+        buffer.complete_state.current_completion.complete(event)
+    else:
+        # Otherwise, submit the text
+        buffer.validate_and_handle()
+
 
 @bindings.add("c-space")
 def _(event):
@@ -119,7 +121,7 @@ welcome_text = 'Bienvenue dans le programme de calcul geometrique\n'
 description = """
 Pour saisir un point: nom_point = Point(x, y)
 Pour saisir un carre: nom_carre = Carre(point, cote)
-Pour saisir un triangle: nom_triangle = Triangle(point1, point2, point3)
+Pour saisir un triangle: nom_triangle = Triangle(a, b, c)
 Pour calculer la distance entre deux points : d = Distance(point1, point2)
 Pour calculer la surface d'un carre : s = Surface(carre)
 Pour calculer la surface d'un triangle : s = Surface(triangle)
@@ -130,82 +132,143 @@ key_words_completer = WordCompleter(keywords, ignore_case=True)
 
 
 def extract_command(text):
-    pattern = r"(Carre|Triangle|Cercle|Point|Distance|Rectangle|Surface|Perimetre)\(([^)]+)\)"
-    name = text.split('=')[0].strip()
-
-    results = {}
-    matches = re.findall(pattern, text)
-    for match in matches:
-        key, params = match
-        if key not in results:
-            results[key] = []
-
-        results[key] = params.split(';')
-    return name, results
+    # Splitting the text into variable name and the command
+    name, command = [part.strip() for part in text.split('=')]
+    # Extracting shape name and parameters
+    shape_name, params = re.match(r"(\w+)\(([^)]+)\)", command).groups()
+    # Splitting parameters by comma and stripping whitespace
+    params = [param.strip() for param in params.split(';')]
+    print(f"Name: {name}, Shape: {shape_name}, Params: {params}")
+    return name, {shape_name: params}
 
 
-def main():
-    pattern = r"(Carre|Triangle|Cercle|Point|Distance|Surface|Rectangle|Perimetre)\(([^)]+)\)"
+def execute_user_prompt(text: str, object_memory=None):
+    if object_memory is None:
+        object_memory = {}
 
+    name, obj_details = extract_command(text)
+
+    type_form = list(obj_details.keys())[0]
+
+    params = obj_details[type_form]
+
+    obj_str = None
+
+    if type_form == 'Carre':
+        if len(params) == 2:
+            obj_str = Carre(name, float(params[1]), object_memory[params[0]])
+        if len(params) == 1:
+            obj_str = Carre(name, float(params[0]))
+
+    elif type_form == 'Triangle':
+        obj = Triangle(name, float(params[0]), float(params[1]), float(params[2]))
+        obj_str = obj
+
+    elif type_form == 'Point':
+        obj = Point(name, float(params[0]), float(params[1]))
+        obj_str = obj
+
+    elif type_form == 'Cercle':
+        if len(params) == 2:
+            obj_str = Cercle(name, float(params[1]), object_memory[params[0]])
+        if len(params) == 1:
+            obj_str = Cercle(name, float(params[0]))
+
+    elif type_form == 'Rectangle':
+        if len(params) == 3:
+            obj_str = Rectangle(name, float(params[1]), float(params[2]), object_memory[params[0]])
+        if len(params) == 2:
+            obj_str = Rectangle(name, float(params[0]), float(params[1]))
+
+    elif type_form == 'Distance':
+        p1 = object_memory[params[0]]
+        p2 = object_memory[params[1]]
+        d = p1.distance(p2)
+        obj_str = f"Distance({p1.name}; {p2.name}) = {round(d, 2)}"
+
+    elif type_form == 'Surface':
+        obj = object_memory[params[0]]
+        s = obj.surface()
+        obj_str = f"Surface: Nom Forme Géométrique = {obj.name}; Type = {type(obj).__name__}; Valeur = {round(s, 2)}"
+
+    elif type_form == 'Perimetre':
+        obj = object_memory[params[0]]
+        p = obj.perimetre()
+        obj_str = f"Perimetre: Forme Géométrique = {obj.name};  Type = {type(obj).__name__}; Valeur = {round(p, 2)}"
+
+    elif type_form == 'Centre':
+        obj = object_memory[params[0]]
+        x,y = obj.calculate_center()
+        obj_str = f"Centre: Forme Géométrique = {obj.name};  Type = {type(obj).__name__}; Centre = Point({x}, {y})"
+    return name, obj_str
+
+
+def read_prompt_from_file(file_path: str, object_memory=None, commands_history=None):
+    if object_memory is None:
+        object_memory = {}
+
+    if commands_history is None:
+        commands_history = []
+
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            commands_history.append(line.strip())
+            name, obj = execute_user_prompt(line.strip(), object_memory)
+            object_memory[name] = obj
+        file.close()
+
+    return object_memory, commands_history
+
+
+def export_to_file(file_path, command_list):
+    with open(file_path, 'w') as f:
+        for command in command_list:
+            f.write(command + '\n')
+        f.close()
+
+
+def main(file_path=None):
     session = PromptSession(lexer=CustomLexer(), completer=key_words_completer, style=style, key_bindings=bindings,
                             complete_while_typing=False)
-
     print(welcome_text)
     print(description)
+
     object_memory = {}
+    commands_history = []
+
+    if file_path is not None:
+        object_memory, commands_history = read_prompt_from_file(file_path, object_memory, commands_history)
+
+    if object_memory:
+        print(f"___________________________________________________________")
+        print(f"Liste des objets en memoire:")
+        for idx, (key, value) in enumerate(object_memory.items()):
+            print(f"{idx + 1}: {value}")
 
     while True:
         try:
             text = session.prompt('> ')
-            name, obj_details = extract_command(text)
-            # print(name, obj_details)
-            type_form = list(obj_details.keys())[0]
-            params = obj_details[type_form]
 
-            obj = None
-            if type_form == 'Carre':
-                obj = Carre(name, float(params[0]))
-                object_memory[name] = obj
-            elif type_form == 'Triangle':
-                obj = Triangle(name, float(params[0]), float(params[1]), float(params[2]))
-                object_memory[name] = obj
+            if text in ['Export', 'export']:
+                export_to_file("file/commands.txt", commands_history)
+                print(f"Les commandes ont été exportées dans le fichier commands.txt")
+                text = session.prompt('> ')
 
-            elif type_form == 'Point':
-                obj = Point(name, float(params[0]), float(params[1]))
-                object_memory[name] = obj
+            commands_history.append(text)
+            name, obj_str = execute_user_prompt(text, object_memory)
 
-            elif type_form == 'Cercle':
-                obj = Cercle(name, float(params[0]))
-                object_memory[name] = obj
+            object_memory[name] = obj_str
 
-            elif type_form == 'Rectangle':
-                obj = Rectangle(name, float(params[0]), float(params[1]))
-                object_memory[name] = obj
-
-            elif type_form == 'Distance':
-                p1 = object_memory[params[0]]
-                p2 = object_memory[params[1]]
-                d = p1.distance(p2)
-                str_distance = f"Distance({p1.name}; {p2.name}) = {round(d, 2)}"
-                object_memory[name] = str_distance
-
-                # print(f"Distance({p1.name}; {p2.name}) = {round(d, 2)}")
-            elif type_form == 'Surface':
-                obj = object_memory[params[0]]
-                s = obj.surface()
-                str_surface = f"Surface({obj.name}) = {round(s, 2)}"
-                object_memory[name] = str_surface
-                # print(f"Surface({obj.name}) = {round(s, 2)}")
-            elif type_form == 'Perimetre':
-                obj = object_memory[params[0]]
-                p = obj.perimetre()
-                str_perimetre = f"Perimetre({obj.name}) = {p}"
-                # print(f"Perimetre({obj.name}) = {p}")
-                object_memory[name] = str_perimetre
             print(f"___________________________________________________________")
             print(f"List des objets en memoire:")
             for idx, (key, value) in enumerate(object_memory.items()):
                 print(f"{idx + 1}: {value}")
+
+            # print(f"*" * 50)
+            # print(f"List des commandes:")
+            # for idx, cmd in enumerate(commands_history):
+            #     print(f"{idx + 1}: {cmd}")
 
             #     elif type_form == 'Distance':
             #         object = Distance(name, params[0], params[1])
@@ -228,4 +291,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file', type=str, help='Le chemin du fichier à traiter.')
+    args = parser.parse_args()
+    if args.file is not None:
+        file_path = "file/" + args.file
+        main(file_path)
+    else:
+        main()

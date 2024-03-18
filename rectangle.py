@@ -1,20 +1,14 @@
 from forme_geometric import FormeGeometrique
-from point import Point
+
 
 class Rectangle(FormeGeometrique):
 
-    def __init__(self, nom, longueur, largeur):
+    def __init__(self, nom, longueur, largeur, point=None):
         super().__init__()
         self.name = nom
         self.longueur = longueur
         self.largeur = largeur
-
-    def __init__(self, nom, longueur, largeur,Point):
-        super().__init__()
-        self.name = nom
-        self.longueur = longueur
-        self.largeur = largeur
-        self.point = Point
+        self.point = point
 
     def surface(self):
         return self.longueur * self.largeur
@@ -23,7 +17,11 @@ class Rectangle(FormeGeometrique):
         return 2 * (self.longueur + self.largeur)
 
     def __str__(self):
-        return f"Rectangle {self.name} de longueur (L = {self.longueur}) et de largeur l = ({self.largeur})"
-    
-    def calcule_centre(self):
-        return Point(self.name, self.point.x + self.longueur / 2, self.point.y + self.largeur / 2)
+        if self.point:
+            obj_str = (f"Rectangle: Nom = {self.name};  Longueur = {self.longueur}; Largeur = {self.largeur}; "
+                       f"Point = {self.point}")
+        obj_str = f"Rectangle: Nom = {self.name};  Longueur = {self.longueur}; Largeur = {self.largeur}"
+        return obj_str
+
+    def calculate_center(self):
+        return round(self.longueur / 2, 2), round(self.largeur / 2, 2)

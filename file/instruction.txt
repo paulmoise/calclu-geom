@@ -1,0 +1,8 @@
+P1 = Point(4;5)
+P2 = Point(8;0)
+d1 = Distance(P1;P2)
+c = Cercle(5)
+s = Surface(c)
+p1 = Perimetre(c)
+r1 = Rectangle(7;5)
+s1 = Surface(r1)
