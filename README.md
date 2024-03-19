@@ -95,6 +95,49 @@ To exit the program, type "Quitter".
 - **Hani Agguini** - *Contributor* - [Hani-Agguini](https://github.com/Hani-Agguini)
 - **AbdelouahedKanouni** - *Contributor* - [abdelouahedKanouni](https://github.com/abdelouahedKanouni)
 
+
+
+
+
+
+## Images Overview
+
+Below are the images from the image directory of the project that detail the use of the program:
+
+### Welcome Message and Instruction Overview
+![Welcome Message and Instruction Overview](images/welcome.PNG)
+- The final image displays the welcome message of the program and gives an overview of the instructions for creating points, geometrical shapes, and how to perform operations like calculating distance, surface, and center of shapes.
+
+
+### Adding a Rectangle with a Point Reference
+![Adding a Rectangle with a Point Reference](images/add-rectangle-with-point.PNG)
+- This image shows the process of creating a rectangle named `R3` with a point `P1` as a reference and dimensions of length 9 and width 5.
+
+### Calculating the Center of a Rectangle
+![Calculating the Center of a Rectangle](images/calcul-centre.PNG)
+- Here, we see the calculation of the center `C1` of the previously created rectangle `R3`. The center is determined to be at the point (4.5, 2.5).
+
+### Exporting Commands
+![Exporting Commands](images/export.PNG)
+- This image illustrates the command `export` which is used to save all the entered commands into a file named `commands.txt`.
+
+### The Export File in the Project Directory
+![The Export File in the Project Directory](images/export-file.PNG)
+- The screenshot shows the project directory with the `commands.txt` file, indicating that the export was successful.
+
+### Code File in the Project Directory
+![Code File in the Project Directory](images/fichier.PNG)
+- This image presents the code file opened in an editor with the list of commands entered so far, ready for execution or editing.
+
+### Importing Commands
+![Importing Commands](images/import-command.PNG)
+- In this image, the user is importing commands from the `instruction.txt` file, demonstrating how to load previous commands into a session.
+
+
+
+
+
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
