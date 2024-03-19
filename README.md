@@ -88,13 +88,6 @@ Here's a quick example of how to use the library to perform some basic operation
 
 To exit the program, type "Quitter".
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://github.com/your/project/contributing.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
 ## Authors
 
@@ -107,8 +100,3 @@ For the versions available, see the [tags on this repository](https://github.com
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
-
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
