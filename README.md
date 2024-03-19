@@ -88,7 +88,6 @@ Here's a quick example of how to use the library to perform some basic operation
 
 To exit the program, type "Quitter".
 
-
 ## Authors
 
 - **Paul Moise** - *Contributor* - [paulmoise](https://github.com/paulmoise)
