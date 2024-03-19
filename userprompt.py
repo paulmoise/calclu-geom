@@ -15,7 +15,8 @@ from point import Point
 from rectangle import Rectangle
 from triangle import Triangle
 
-keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter', "Centre", "Export", "export"]
+keywords = ['Carre', 'Triangle', 'Cercle', 'Rectangle', 'Point', 'Distance', 'Surface', 'Perimetre', 'Quitter',
+            "Centre", "Export", "export"]
 
 bindings = KeyBindings()
 
@@ -117,15 +118,39 @@ style = Style.from_dict({
     'text': ''  # Default text style (optional, for clarity)
 })
 
-welcome_text = 'Bienvenue dans le programme de calcul geometrique\n'
-description = """
-Pour saisir un point: nom_point = Point(x, y)
-Pour saisir un carre: nom_carre = Carre(point, cote)
-Pour saisir un triangle: nom_triangle = Triangle(a, b, c)
-Pour calculer la distance entre deux points : d = Distance(point1, point2)
-Pour calculer la surface d'un carre : s = Surface(carre)
-Pour calculer la surface d'un triangle : s = Surface(triangle)
-Taper "Quitter" pour quitter le programme
+welcome_text = """
+Bienvenue dans le programme de calcul géométrique.
+
+Vous pouvez effectuer diverses opérations géométriques et exporter vos commandes. Voici comment procéder :
+
+Points:
+Exemples :
+- P1 = Point(2;4) # Crée un point P1 aux coordonnées (2, 4).
+- P2 = Point(5;7) # Crée un point P2 aux coordonnées (5, 7).
+
+Formes géométriques :
+Vous pouvez créer différentes formes géométriques telles que le Cercle, le Rectangle, le Carré et le Triangle.
+Exemples :
+- C1 = Cercle(P1; 4) # Crée un cercle nommé C1 avec le centre en P1 et un rayon de 4.
+- R1 = Rectangle(P1; 10; 5) # Crée un rectangle avec le coin supérieur gauche en P1, une largeur de 10 et une hauteur de 5.
+- Ca1 = Carre(P2; 6) # Crée un carré nommé Ca1 avec le coin supérieur gauche en P2 et un côté de longueur 6.
+- T1 = Triangle(4;4;8) # Crée un triangle avec les sommets en P1, P2 et un troisième point aux coordonnées (2, 8).
+
+Opérateurs :
+Utilisez ces opérateurs pour calculer la distance entre deux points, la surface ou le centre d'une forme.
+Exemples :
+- d1 = Distance(P1, P2) # Calcule la distance entre les points P1 et P2.
+- sC1 = Surface(C1) # Calcule la surface du cercle C1.
+- sR1 = Surface(R1) # Calcule la surface du rectangle R1.
+- cC1 = Centre(C1) # Retourne le centre du cercle C1.
+- sCa1 = Surface(Ca1) # Calcule la surface du carré Ca1.
+- sT1 = Surface(T1) # Calcule la surface du triangle T1.
+
+Exportation de vos commandes :
+- Tapez "Export" ou "export" pour sauvegarder toutes les commandes entrées dans un fichier. 
+Cela peut être utile pour documenter votre travail ou pour recharger les commandes lors d'une future session.
+
+Pour quitter le programme, tapez "Quitter".
 """
 
 key_words_completer = WordCompleter(keywords, ignore_case=True)
@@ -138,7 +163,7 @@ def extract_command(text):
     shape_name, params = re.match(r"(\w+)\(([^)]+)\)", command).groups()
     # Splitting parameters by comma and stripping whitespace
     params = [param.strip() for param in params.split(';')]
-    print(f"Name: {name}, Shape: {shape_name}, Params: {params}")
+    # print(f"Name: {name}, Shape: {shape_name}, Params: {params}")
     return name, {shape_name: params}
 
 
@@ -198,7 +223,7 @@ def execute_user_prompt(text: str, object_memory=None):
 
     elif type_form == 'Centre':
         obj = object_memory[params[0]]
-        x,y = obj.calculate_center()
+        x, y = obj.calculate_center()
         obj_str = f"Centre: Forme Géométrique = {obj.name};  Type = {type(obj).__name__}; Centre = Point({x}, {y})"
     return name, obj_str
 
@@ -231,8 +256,7 @@ def export_to_file(file_path, command_list):
 def main(file_path=None):
     session = PromptSession(lexer=CustomLexer(), completer=key_words_completer, style=style, key_bindings=bindings,
                             complete_while_typing=False)
-    print(welcome_text)
-    print(description)
+    #print(welcome_text)
 
     object_memory = {}
     commands_history = []
